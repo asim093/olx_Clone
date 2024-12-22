@@ -1,0 +1,9 @@
+
+.card{
+    transition: 0.3s ease;
+    scale: 1;
+}
+.card:hover{
+    border-color: black;
+  scale: 1.1;
+}

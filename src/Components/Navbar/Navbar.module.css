@@ -1,0 +1,66 @@
+.main_input {
+  width: 50% !important; /* Ensures the container width */
+border: 1px solid #e0e0e0;  
+border-radius: 5px;
+  display: flex; /* Flex container for child alignment */
+  align-items: center; /* Centers children vertically */
+  position: relative; /* Keeps child elements positioned properly */
+  height: 3.5rem;
+}
+
+
+
+.search_div{
+  height: 100%;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.main_input{
+  width: 50% !important;
+}
+
+.login_text p{
+  color: #002f34;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login_text p:hover{
+  text-decoration: underline;
+}
+.sell_icon_div{
+  margin-left: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo{
+  cursor: pointer;
+}
+
+@media (min-width: 320px ) and (max-width:768px){ 
+  .location_input{
+    width: 100% !important;
+    margin: 0 !important;
+    gap: 0 !important;
+  }
+
+  .main_input{
+    width: 100% !important;
+    padding: 0 !important;
+    height: 50px;
+    margin-top: 10px;
+  }
+
+  .sell_icon_div{
+    margin-left: 10px !important;
+  }
+  .sell_icon_div img{
+    width: 80%;
+    cursor: pointer;
+  }
+
+  
+ }
