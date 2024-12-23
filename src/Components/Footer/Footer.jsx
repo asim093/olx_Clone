@@ -30,8 +30,8 @@ const Footer = () => {
           <p className="font-bold text-[#002f34] ">
             Get your App Today
           </p>
-          <div className="flex justify-center items-start mt-5 ">
-            <img src={App_gallery} alt="App Gallery" className="h-5 w-32" />
+          <div className="flex justify-center items-start mt-5 space-x-2">
+            <img src={App_gallery} alt="App Gallery" className="h-5" />
             <img src={google} alt="Google Play" className="h-5" />
             <img src={Apple} alt="App Store" className="h-5" />
           </div>

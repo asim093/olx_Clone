@@ -23,9 +23,11 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        dispatch(addUser({email , password}));
+        const userid = user.uid;
         alert("User Login successfully");
+        dispatch(addUser({email , password , userid }));
         navigate('/')
+        console.log(user.uid);
       })
       .catch((error) => {
         alert(error.message)

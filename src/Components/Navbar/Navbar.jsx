@@ -50,14 +50,12 @@ const Navbar = () => {
   return (
     <div className="border-b">
       <div className="container mx-auto px-4  ">
-        {/* Top row: Logo and categories */}
         <div className="flex flex-wrap items-center justify-start gap-4 py-4">
           {/* Logo */}
           <div className="flex-shrink-0">
             <img src={logo} alt="logo" className="w-16 h-16" />
           </div>
 
-          {/* Categories */}
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center space-x-2">
               <div className="flex items-center justify-center w-12 h-12 bg-gray-200 rounded-full">
@@ -172,8 +170,8 @@ const Navbar = () => {
                   <li>
                     <a className="justify-between">Profile</a>
                   </li>
-                  <li>
-                    <a>Settings</a>
+                  <li onClick={() => navigate('/cart')}>
+                    <a>Cart</a>
                   </li>
                   <li onClick={Logoutuser}>
                     <a>Logout</a>

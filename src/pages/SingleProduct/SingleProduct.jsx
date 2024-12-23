@@ -1,35 +1,96 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../../Components/PageLayout/PageLayout";
-import { FaCartArrowDown, FaMapMarkerAlt, FaPhoneAlt, FaShareAlt } from "react-icons/fa";
+import { updateDoc , arrayUnion } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+import {
+  FaCartArrowDown,
+  FaMapMarkerAlt,
+  FaPhoneAlt,
+  FaShareAlt,
+} from "react-icons/fa";
 import { CiChat1 } from "react-icons/ci";
 import avatar from "../../assets/avatar.png";
 import { FaHeart } from "react-icons/fa6";
 import { db } from "../../Config/Firebase/Config.js";
 import { doc, getDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
+import { query, where, getDocs, collection } from "firebase/firestore";
+
+const auth = getAuth();
 
 const SingleProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
+  const [userid, setUserid] = useState();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   function shownumber() {
     alert(product.phoneNumber);
     console.log(product);
   }
 
-  // Prev button functionality
   const prev = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
     );
   };
 
-  // Next button functionality
   const next = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
     );
+  };
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      if (currentUser) {
+        console.log("Current User:", currentUser.uid);
+        setUserid(currentUser.uid);
+      } else {
+        console.log("No user is logged in.");
+        setUserid(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const addtocart = async () => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("Please log in to add products to your cart.");
+      return;
+    }
+
+    try {
+      // Create a query to find the user document based on userId field
+      const usersCollectionRef = collection(db, "users");
+      const q = query(usersCollectionRef, where("userId", "==", user.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        console.log("User not found");
+        return; 
+      }
+
+      // Assuming there is only one document for the user
+      const userDoc = querySnapshot.docs[0]; // Get the first matching document
+      const userDocRef = userDoc.ref;
+
+      // Update the cart for that user
+      await updateDoc(userDocRef, {
+        cart: arrayUnion(id),
+      });
+
+      alert("Product added to cart!");
+    } catch (error) {
+      console.error("Error adding to cart: ", error);
+      alert(
+        "There was an error adding the product to your cart. Please try again."
+      );
+    }
   };
 
   useEffect(() => {
@@ -46,7 +107,12 @@ const SingleProduct = () => {
     fetchProduct();
   }, [id]);
 
-  if (!product) return <p>Loading...</p>;
+  if (!product)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-20 h-20 border-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+      </div>
+    );
 
   return (
     <PageLayout>
@@ -54,17 +120,24 @@ const SingleProduct = () => {
         <div className="grid grid-cols-12 gap-4">
           {/* Carousel Section */}
           <div className="col-span-12 md:col-span-8">
-            <div className="carousel w-full">
+            <div className="carousel w-full h-96">
               {product.images && product.images.length > 0 ? (
-                <div key={currentImageIndex} className="carousel-item relative d-flex justify-center items-center w-full">
+                <div
+                  key={currentImageIndex}
+                  className="carousel-item relative d-flex justify-center items-center w-full"
+                >
                   <img
                     src={product.images[currentImageIndex]}
                     alt={`Product Image ${currentImageIndex + 1}`}
-                    className="w-4/6  object-cover"
+                    className="w-3/6 object-cover"
                   />
                   <div className="absolute left-1 right-1 top-1/2 flex -translate-y-1/2 transform justify-between">
-                    <button onClick={prev} className="btn btn-circle">❮</button>
-                    <button onClick={next} className="btn btn-circle">❯</button>
+                    <button onClick={prev} className="btn btn-circle">
+                      ❮
+                    </button>
+                    <button onClick={next} className="btn btn-circle">
+                      ❯
+                    </button>
                   </div>
                 </div>
               ) : (
@@ -74,7 +147,7 @@ const SingleProduct = () => {
           </div>
 
           {/* Product Details Section */}
-          <div className="col-span-12 md:col-span-4 bg-white p-4 mt-10 rounded-lg shadow-md">
+          <div className="col-span-12 md:col-span-4 bg-white p-4 mt-10 rounded-lg shadow-md h-96">
             <div className="flex items-center mb-2">
               <div className="flex-shrink-0 mr-4">
                 <img
@@ -104,7 +177,10 @@ const SingleProduct = () => {
                 <p>Show phone number</p>
               </button>
 
-              <button className="bg-gray-300 hover:bg-gray-400 mt-2 text-black font-bold py-2 px-4 rounded w-full flex justify-center items-center space-x-2">
+              <button
+                className="bg-gray-300 hover:bg-gray-400 mt-2 text-black font-bold py-2 px-4 rounded w-full flex justify-center items-center space-x-2"
+                onClick={addtocart}
+              >
                 <FaCartArrowDown />
                 <p>Add To Cart</p>
               </button>

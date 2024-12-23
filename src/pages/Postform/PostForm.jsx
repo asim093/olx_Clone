@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { app } from "../../Config/Firebase/Config";
 import { useParams } from "react-router-dom";
 
@@ -9,6 +10,9 @@ const VehicleForm = () => {
   const [Images, Setimages] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
   const { name } = useParams();
+  const [userId, Setuserid] = useState();
+  const auth = getAuth();
+  const db = getFirestore(app);
   const [formData, setFormData] = useState({
     category: name,
     make: "",
@@ -21,11 +25,24 @@ const VehicleForm = () => {
     phoneNumber: "",
     showPhoneNumber: true,
   });
+
   const [loading, setLoading] = useState(false);
-  const [imageUploading, setImageUploading] = useState(false); // New state for image upload loader
+  const [imageUploading, setImageUploading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const db = getFirestore(app);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      if (currentUser) {
+        console.log("Current User:", currentUser.uid);
+        Setuserid(currentUser.uid)
+      } else {
+        console.log("No user is logged in.");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,18 +59,17 @@ const VehicleForm = () => {
     }));
   };
 
-  // Image upload logic
   const imagesclick = () => {
     if (Images.length === 0) return;
 
-    setImageUploading(true); // Show spinner when image upload starts
+    setImageUploading(true);
     const newImages = Images.filter(
       (image) => !uploadedImages.includes(image.name)
     );
 
     if (newImages.length === 0) {
       console.log("No new images to upload");
-      setImageUploading(false); // Hide spinner if no new images
+      setImageUploading(false);
       return;
     }
 
@@ -78,7 +94,6 @@ const VehicleForm = () => {
         });
     });
 
-    // Wait for all images to be uploaded
     Promise.all(uploadPromises)
       .then((urls) => {
         const successfulUrls = urls.filter((url) => url !== null);
@@ -86,12 +101,12 @@ const VehicleForm = () => {
           ...prev,
           images: successfulUrls,
         }));
-        setImageUploading(false); // Hide spinner after images are uploaded
+        setImageUploading(false);
         setSuccessMessage("Images uploaded successfully.");
       })
       .catch((err) => {
         console.error("Error uploading images:", err);
-        setImageUploading(false); // Hide spinner if there's an error
+        setImageUploading(false);
         setErrorMessage("Error uploading images.");
       });
   };
@@ -103,6 +118,7 @@ const VehicleForm = () => {
 
   const firebasedata = async () => {
     const docRef = await addDoc(collection(db, "Posts"), {
+      userid : userId,
       category: formData.category,
       images: formData.images,
       adTitle: formData.adTitle,

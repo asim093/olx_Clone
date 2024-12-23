@@ -28,7 +28,7 @@ const CardMain = () => {
   return (
     <div className="container mx-auto px-5 my-10">
       <p className="text-[#002f34] font-bold text-2xl py-5">Mobile Phones</p>
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-10 flex-wrap sm:justify-between col-nowrap">
         {products.map((product) => (
           <Card
             key={product.id}

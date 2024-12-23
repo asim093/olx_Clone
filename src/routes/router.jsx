@@ -5,6 +5,7 @@ import Home from "../pages/Home/Home";
 import CategorySelectionPage from "../pages/PostAd/PostAdd";
 import PostAdForm from "../pages/Postform/PostForm";
 import ProductPage from "../pages/SingleProduct/SingleProduct";
+import Cartpage from "../pages/CartPage/Cartpage";
 
 export const publicroute = createBrowserRouter([
   {
@@ -30,5 +31,9 @@ export const publicroute = createBrowserRouter([
   {
     path: "/singleProduct/:id",
     element: <ProductPage />,
+  },
+  {
+    path: "/cart",
+    element: <Cartpage />,
   },
 ]);
