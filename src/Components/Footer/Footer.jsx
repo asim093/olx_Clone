@@ -31,7 +31,7 @@ const Footer = () => {
             Get your App Today
           </p>
           <div className="flex justify-center items-start mt-5 ">
-            <img src={App_gallery} alt="App Gallery" className="h-5" />
+            <img src={App_gallery} alt="App Gallery" className="h-5 w-32" />
             <img src={google} alt="Google Play" className="h-5" />
             <img src={Apple} alt="App Store" className="h-5" />
           </div>
