@@ -8,7 +8,7 @@ import { CiFacebook, CiTwitter, CiPlay1, CiInstagram } from "react-icons/ci";
 const Footer = () => {
   return (
     <div>
-      <div className="flex  p-6 justify-center gap-10 flex-wrap items-center container mx-auto">
+      <div className="flex  p-6 justify-center gap-10 flex-wrap items-center container mx-auto overflow-hidden">
         {/* Image Section */}
         <div>
           <img src={footerimage2} alt="footer image" className="h-34" />
