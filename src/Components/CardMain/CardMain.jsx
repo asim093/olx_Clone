@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { db, collection, getDocs } from "../../Config/Firebase/Config.js";
+import { db, collection, getDocs, query, where } from "../../Config/Firebase/Config.js"; // Import from your custom config
 import Card from "../Card/Card.jsx";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const CardMain = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const searchValue = useSelector((state) => state.user.value); 
 
   function singleProduct(id) {
     navigate(`/singleProduct/${id}`);
@@ -13,17 +15,27 @@ const CardMain = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const productsCollection = collection(db, "Posts");
-      const productsSnapshot = await getDocs(productsCollection);
+      let productsQuery = collection(db, "Posts");
+
+      if (searchValue) {
+        productsQuery = query(
+          productsQuery,
+          where("adTitle", ">=", searchValue), 
+          where("adTitle", "<=", searchValue + '\uf8ff') 
+        );
+      }
+
+      const productsSnapshot = await getDocs(productsQuery);
       const productsList = productsSnapshot.docs.map((doc) => ({
-        id: doc.id, // Include the document ID
-        ...doc.data(), // Spread the document data
+        id: doc.id,
+        ...doc.data(),
       }));
+
       setProducts(productsList);
     };
 
     fetchProducts();
-  }, []);
+  }, [searchValue]); 
 
   return (
     <div className="container mx-auto px-5 my-10">

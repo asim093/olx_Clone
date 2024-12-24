@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, getDocs } from "firebase/firestore"; 
+import { getFirestore, collection, getDocs , query , where } from "firebase/firestore"; 
 const firebaseConfig = {
   apiKey: "AIzaSyAPdBu4EmNdt6_dM7ilO5Dj7UBmQiYAlGo",
   authDomain: "olxclone-bf9fc.firebaseapp.com",
@@ -16,4 +16,4 @@ const analytics = getAnalytics(app);
 
 const db = getFirestore(app);
 
-export { db, collection, getDocs }; 
+export { db, collection, getDocs , query , where }; 

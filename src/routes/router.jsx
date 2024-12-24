@@ -6,6 +6,7 @@ import CategorySelectionPage from "../pages/PostAd/PostAdd";
 import PostAdForm from "../pages/Postform/PostForm";
 import ProductPage from "../pages/SingleProduct/SingleProduct";
 import Cartpage from "../pages/CartPage/Cartpage";
+import Profile from "../pages/Profile/profile";
 
 export const publicroute = createBrowserRouter([
   {
@@ -35,5 +36,9 @@ export const publicroute = createBrowserRouter([
   {
     path: "/cart",
     element: <Cartpage />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ]);

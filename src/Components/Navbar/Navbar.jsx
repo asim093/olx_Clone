@@ -8,7 +8,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import Styles from "./Navbar.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeUser } from "../../redux/Features/Userslice";
+import { removeUser, SearchInput } from "../../redux/Features/Userslice";
 
 const Navbar = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -16,6 +16,8 @@ const Navbar = () => {
   const userLogin = useSelector((state) => state.user.isLogin);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const InputValue = useDispatch();
+  const searchValue = useSelector((state) => state.user.value); 
   const cities = ["Pakistan", "India", "USA", "Canada", "Australia"];
 
   const handleInputClick = () => {
@@ -46,6 +48,10 @@ const Navbar = () => {
   const handleCitySelect = () => {
     setSelectedCity(city);
     setIsDropdownVisible(false);
+  };
+
+  const handleInputChange = (e) => {
+    dispatch(SearchInput(e.target.value));
   };
   return (
     <div className="border-b">
@@ -138,7 +144,9 @@ const Navbar = () => {
             <input
               type="text"
               className=" h-full w-full pl-12 border-none  outline-none border "
-              placeholder="Find Cars, Mobile Phones and More"
+              placeholder="Find Cars, Mobile Phones and More"  
+              value={searchValue}  
+              onChange={handleInputChange}
             />
             <div
               className={`${Styles.search_div}  rounded-md cursor-pointer bg-[#002f34]`}
@@ -167,7 +175,7 @@ const Navbar = () => {
                   tabIndex={0}
                   className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
                 >
-                  <li>
+                  <li onClick={() => navigate("/profile")}>
                     <a className="justify-between">Profile</a>
                   </li>
                   <li onClick={() => navigate('/cart')}>

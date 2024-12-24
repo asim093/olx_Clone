@@ -4,6 +4,7 @@ const initialState = {
     data: {},
     isLogin: false,
     name : "",
+    value : ""
 };
 
 const Userslice = createSlice({
@@ -23,8 +24,11 @@ const Userslice = createSlice({
             state.data = {};
             state.isLogin = false;  
         },
+        SearchInput: (state , action) => {
+           state.value = action.payload
+        },
     },
 });
 
 export default Userslice.reducer;
-export const { addUser, removeUser , addUsername } = Userslice.actions;
+export const { addUser, removeUser , addUsername , SearchInput } = Userslice.actions;
